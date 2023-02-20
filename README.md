@@ -2,6 +2,8 @@
 
 Counts up from a specified date
 
+(this was built with a game engine so best not to leave it running)
+
 ## Usage
 
 ```

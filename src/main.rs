@@ -5,8 +5,6 @@ use pixels_graphics_lib::prefs::WindowPreferences;
 use pixels_graphics_lib::prelude::Positioning::{LeftTop, RightTop};
 use pixels_graphics_lib::prelude::VirtualKeyCode::Escape;
 use pixels_graphics_lib::prelude::*;
-use std::thread::sleep;
-use std::time::Duration;
 
 fn main() -> Result<()> {
     let matches = command!()
@@ -102,8 +100,6 @@ impl System for Countup {
             if day_count != self.days {
                 self.days = day_count;
                 self.current_days = day_count;
-            } else {
-                sleep(Duration::from_secs(6000));
             }
         }
     }
