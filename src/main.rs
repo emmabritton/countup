@@ -123,41 +123,25 @@ impl System for Countup {
             Px(COL_NUM, 24),
             (WHITE, Large, RightTop),
         );
-        graphics.draw_text(
-            "DAYS",
-            Px(COL_PERIOD, 24),
-            (LIGHT_GRAY, Large, LeftTop),
-        );
+        graphics.draw_text("DAYS", Px(COL_PERIOD, 24), (LIGHT_GRAY, Large, LeftTop));
         graphics.draw_text(
             &format!("{weeks}"),
             Px(COL_NUM, 40),
             (WHITE, Large, RightTop),
         );
-        graphics.draw_text(
-            "WEEKS",
-            Px(COL_PERIOD, 40),
-            (LIGHT_GRAY, Large, LeftTop),
-        );
+        graphics.draw_text("WEEKS", Px(COL_PERIOD, 40), (LIGHT_GRAY, Large, LeftTop));
         graphics.draw_text(
             &format!("{months}"),
             Px(COL_NUM, 56),
             (WHITE, Large, RightTop),
         );
-        graphics.draw_text(
-            "MONTHS",
-            Px(COL_PERIOD, 56),
-            (LIGHT_GRAY, Large, LeftTop),
-        );
+        graphics.draw_text("MONTHS", Px(COL_PERIOD, 56), (LIGHT_GRAY, Large, LeftTop));
         graphics.draw_text(
             &format!("{years}"),
             Px(COL_NUM, 72),
             (WHITE, Large, RightTop),
         );
-        graphics.draw_text(
-            "YEARS",
-            Px(COL_PERIOD, 72),
-            (LIGHT_GRAY, Large, LeftTop),
-        );
+        graphics.draw_text("YEARS", Px(COL_PERIOD, 72), (LIGHT_GRAY, Large, LeftTop));
     }
 
     fn on_key_pressed(&mut self, keys: Vec<VirtualKeyCode>) {
