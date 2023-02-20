@@ -1,12 +1,12 @@
-use std::thread::sleep;
-use std::time::Duration;
 use chrono::{DateTime, Datelike, Utc};
 use clap::{arg, command};
 use color_eyre::Result;
 use pixels_graphics_lib::prefs::WindowPreferences;
+use pixels_graphics_lib::prelude::Positioning::{LeftTop, RightTop};
 use pixels_graphics_lib::prelude::VirtualKeyCode::Escape;
 use pixels_graphics_lib::prelude::*;
-use pixels_graphics_lib::prelude::Positioning::{LeftTop, RightTop};
+use std::thread::sleep;
+use std::time::Duration;
 
 fn main() -> Result<()> {
     let matches = command!()
@@ -35,7 +35,7 @@ fn main() -> Result<()> {
     ui(
         days,
         format!("{:0>2}/{:0>2}/{}", start.day(), start.month(), start.year()),
-        start
+        start,
     )
 }
 
@@ -55,13 +55,14 @@ struct Countup {
     should_exit: bool,
     current_days: usize,
     next_inc_speed: f64,
-    next_inc: f64
+    next_inc: f64,
 }
 
 impl Countup {
     pub fn new(days: usize, start: String, start_date: DateTime<Utc>) -> Self {
         let f_days = days as f64;
-        let next_inc_speed = ((f_days/365.0) * COUNT_TIME_PER_YEAR).max(COUNT_TIME_PER_YEAR) / f_days;
+        let next_inc_speed =
+            ((f_days / 365.0) * COUNT_TIME_PER_YEAR).max(COUNT_TIME_PER_YEAR) / f_days;
         Self {
             start_date,
             days,
@@ -69,13 +70,13 @@ impl Countup {
             should_exit: false,
             current_days: 0,
             next_inc_speed,
-            next_inc: 0.0
+            next_inc: 0.0,
         }
     }
 }
 
 fn ui(days: usize, start: String, start_date: DateTime<Utc>) -> Result<()> {
-    let system = Box::new(Countup::new(days, start,start_date));
+    let system = Box::new(Countup::new(days, start, start_date));
     run(270, 90, "Countup", system, Options::default())?;
     Ok(())
 }
@@ -96,7 +97,7 @@ impl System for Countup {
                 self.next_inc += self.next_inc_speed;
             }
             self.next_inc -= timing.fixed_time_step;
-        }else {
+        } else {
             let (_, day_count) = calc_days_since(self.start_date);
             if day_count != self.days {
                 self.days = day_count;
@@ -120,42 +121,42 @@ impl System for Countup {
         graphics.draw_text(
             &format!("{}", self.current_days),
             Px(COL_NUM, 24),
-            (WHITE, Large, RightTop)
+            (WHITE, Large, RightTop),
         );
         graphics.draw_text(
-            &format!("DAYS"),
+            "DAYS",
             Px(COL_PERIOD, 24),
-            (LIGHT_GRAY, Large, LeftTop)
+            (LIGHT_GRAY, Large, LeftTop),
         );
         graphics.draw_text(
             &format!("{weeks}"),
             Px(COL_NUM, 40),
-            (WHITE, Large, RightTop)
+            (WHITE, Large, RightTop),
         );
         graphics.draw_text(
-            &format!("WEEKS"),
+            "WEEKS",
             Px(COL_PERIOD, 40),
-            (LIGHT_GRAY, Large, LeftTop)
+            (LIGHT_GRAY, Large, LeftTop),
         );
         graphics.draw_text(
             &format!("{months}"),
             Px(COL_NUM, 56),
-            (WHITE, Large, RightTop)
+            (WHITE, Large, RightTop),
         );
         graphics.draw_text(
-            &format!("MONTHS"),
+            "MONTHS",
             Px(COL_PERIOD, 56),
-            (LIGHT_GRAY, Large, LeftTop)
+            (LIGHT_GRAY, Large, LeftTop),
         );
         graphics.draw_text(
             &format!("{years}"),
             Px(COL_NUM, 72),
-            (WHITE, Large, RightTop)
+            (WHITE, Large, RightTop),
         );
         graphics.draw_text(
-            &format!("YEARS"),
+            "YEARS",
             Px(COL_PERIOD, 72),
-            (LIGHT_GRAY, Large, LeftTop)
+            (LIGHT_GRAY, Large, LeftTop),
         );
     }
 
