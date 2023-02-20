@@ -1,0 +1,16 @@
+[package]
+name = "countup"
+version = "0.1.0"
+edition = "2021"
+authors = ["Emma Britton <emmabritton@pm.me>"]
+publish = false
+description = "Counts up from a specified date"
+repository = "https://github.com/emmabritton/countup"
+license-file = "LICENSE"
+readme = "README.md"
+
+[dependencies]
+pixels-graphics-lib = "0.8.4"
+chrono = "0.4.23"
+color-eyre = "0.6.2"
+clap = {version="4.1.6", features = ["cargo"] }
