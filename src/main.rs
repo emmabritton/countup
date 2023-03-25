@@ -3,7 +3,7 @@ use clap::{arg, command};
 use color_eyre::Result;
 use pixels_graphics_lib::prefs::WindowPreferences;
 use pixels_graphics_lib::prelude::Positioning::{LeftTop, RightTop};
-use pixels_graphics_lib::prelude::VirtualKeyCode::Escape;
+use pixels_graphics_lib::prelude::VirtualKeyCode::{Escape, Space};
 use pixels_graphics_lib::prelude::*;
 
 fn main() -> Result<()> {
@@ -54,6 +54,7 @@ struct Countup {
     current_days: usize,
     next_inc_speed: f64,
     next_inc: f64,
+    diff_mode: bool
 }
 
 impl Countup {
@@ -69,6 +70,7 @@ impl Countup {
             current_days: 0,
             next_inc_speed,
             next_inc: 0.0,
+            diff_mode: false
         }
     }
 }
@@ -81,7 +83,7 @@ fn ui(days: usize, start: String, start_date: DateTime<Utc>) -> Result<()> {
 
 impl System for Countup {
     fn action_keys(&self) -> Vec<VirtualKeyCode> {
-        vec![Escape]
+        vec![Escape, Space]
     }
 
     fn window_prefs(&self) -> Option<WindowPreferences> {
@@ -105,48 +107,96 @@ impl System for Countup {
     }
 
     fn render(&self, graphics: &mut Graphics) {
-        graphics.clear(DARK_GRAY);
-        graphics.draw_text(
-            &format!("Since {} it's been", self.start),
-            Px(4, 4),
-            (LIGHT_GRAY, Large),
-        );
-        let weeks = self.current_days / 7;
-        let months = self.current_days / 28;
-        let years = self.current_days / 365;
-        graphics.draw_text(
-            &format!("{}", self.current_days),
-            Px(COL_NUM, 24),
-            (WHITE, Large, RightTop),
-        );
-        graphics.draw_text("DAYS", Px(COL_PERIOD, 24), (LIGHT_GRAY, Large, LeftTop));
-        graphics.draw_text(
-            &format!("{weeks}"),
-            Px(COL_NUM, 40),
-            (WHITE, Large, RightTop),
-        );
-        graphics.draw_text("WEEKS", Px(COL_PERIOD, 40), (LIGHT_GRAY, Large, LeftTop));
-        graphics.draw_text(
-            &format!("{months}"),
-            Px(COL_NUM, 56),
-            (WHITE, Large, RightTop),
-        );
-        graphics.draw_text("MONTHS", Px(COL_PERIOD, 56), (LIGHT_GRAY, Large, LeftTop));
-        graphics.draw_text(
-            &format!("{years}"),
-            Px(COL_NUM, 72),
-            (WHITE, Large, RightTop),
-        );
-        graphics.draw_text("YEARS", Px(COL_PERIOD, 72), (LIGHT_GRAY, Large, LeftTop));
+        if self.diff_mode {
+            render_diff(graphics, self.current_days, &self.start)
+        } else {
+            render_split(graphics, self.current_days, &self.start);
+        }
     }
 
     fn on_key_pressed(&mut self, keys: Vec<VirtualKeyCode>) {
         if keys.contains(&Escape) {
             self.should_exit = true
+        } else if keys.contains(&Space) {
+            self.current_days = 0;
+            self.diff_mode= !self.diff_mode;
         }
     }
 
     fn should_exit(&self) -> bool {
         self.should_exit
     }
+}
+
+fn render_split(graphics: &mut Graphics, current_days: usize, start: &str) {
+    graphics.clear(DARK_GRAY);
+    graphics.draw_text(
+        &format!("Since {} it's been", start),
+        Px(4, 4),
+        (LIGHT_GRAY, Large),
+    );
+    let years = current_days / 365;
+    let remaining = current_days - (years * 365);
+    let months = remaining / 28;
+    let remaining = remaining - (months * 28);
+    let days = remaining as usize;
+    let months = months as usize;
+    let years = years as usize;
+    graphics.draw_text(
+        &format!("{years}"),
+        Px(COL_NUM, 24),
+        (WHITE, Large, RightTop),
+    );
+    graphics.draw_text("YEARS", Px(COL_PERIOD, 24), (LIGHT_GRAY, Large, LeftTop));
+    graphics.draw_text(
+        &format!("{months}"),
+        Px(COL_NUM, 40),
+        (WHITE, Large, RightTop),
+    );
+    graphics.draw_text("MONTHS", Px(COL_PERIOD, 40), (LIGHT_GRAY, Large, LeftTop));
+    graphics.draw_text(
+        &format!("{days}"),
+        Px(COL_NUM, 56),
+        (WHITE, Large, RightTop),
+    );
+    graphics.draw_text("DAYS", Px(COL_PERIOD, 56), (LIGHT_GRAY, Large, LeftTop));
+}
+
+fn render_diff(graphics: &mut Graphics, current_days: usize, start: &str) {
+    graphics.clear(DARK_GRAY);
+    graphics.draw_text(
+        &format!("Since {} it's been", start),
+        Px(4, 4),
+        (LIGHT_GRAY, Large),
+    );
+    let weeks = current_days / 7;
+    let months = current_days / 28;
+    let years = current_days / 365;
+    graphics.draw_text(
+        &format!("{current_days}"),
+        Px(COL_NUM, 24),
+        (WHITE, Large, RightTop),
+    );
+    graphics.draw_text("DAYS", Px(COL_PERIOD, 24), (LIGHT_GRAY, Large, LeftTop));
+    graphics.draw_text("or", Px(COL_PERIOD + 42, 29), (LIGHT_GRAY, Small, LeftTop));
+    graphics.draw_text(
+        &format!("{weeks}"),
+        Px(COL_NUM, 40),
+        (WHITE, Large, RightTop),
+    );
+    graphics.draw_text("WEEKS", Px(COL_PERIOD, 40), (LIGHT_GRAY, Large, LeftTop));
+    graphics.draw_text("or", Px(COL_PERIOD + 52, 45), (LIGHT_GRAY, Small, LeftTop));
+    graphics.draw_text(
+        &format!("{months}"),
+        Px(COL_NUM, 56),
+        (WHITE, Large, RightTop),
+    );
+    graphics.draw_text("MONTHS", Px(COL_PERIOD, 56), (LIGHT_GRAY, Large, LeftTop));
+    graphics.draw_text("or", Px(COL_PERIOD + 62, 61), (LIGHT_GRAY, Small, LeftTop));
+    graphics.draw_text(
+        &format!("{years}"),
+        Px(COL_NUM, 72),
+        (WHITE, Large, RightTop),
+    );
+    graphics.draw_text("YEARS", Px(COL_PERIOD, 72), (LIGHT_GRAY, Large, LeftTop));
 }

@@ -16,6 +16,9 @@ Options:
 
 ```
 
+Press space to swap modes
+
 ## Screenshots
 
-![Default date](https://github.com/emmabritton/countup/raw/main/.github/screenshots/default_date.png)
+![Split](https://github.com/emmabritton/countup/raw/main/.github/screenshots/diff.png)
+![Diff](https://github.com/emmabritton/countup/raw/main/.github/screenshots/split.png)
