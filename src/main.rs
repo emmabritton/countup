@@ -54,7 +54,7 @@ struct Countup {
     current_days: usize,
     next_inc_speed: f64,
     next_inc: f64,
-    diff_mode: bool
+    diff_mode: bool,
 }
 
 impl Countup {
@@ -70,7 +70,7 @@ impl Countup {
             current_days: 0,
             next_inc_speed,
             next_inc: 0.0,
-            diff_mode: false
+            diff_mode: false,
         }
     }
 }
@@ -119,7 +119,7 @@ impl System for Countup {
             self.should_exit = true
         } else if keys.contains(&Space) {
             self.current_days = 0;
-            self.diff_mode= !self.diff_mode;
+            self.diff_mode = !self.diff_mode;
         }
     }
 
@@ -138,10 +138,7 @@ fn render_split(graphics: &mut Graphics, current_days: usize, start: &str) {
     let years = current_days / 365;
     let remaining = current_days - (years * 365);
     let months = remaining / 28;
-    let remaining = remaining - (months * 28);
-    let days = remaining as usize;
-    let months = months as usize;
-    let years = years as usize;
+    let days = remaining - (months * 28);
     graphics.draw_text(
         &format!("{years}"),
         Px(COL_NUM, 24),
